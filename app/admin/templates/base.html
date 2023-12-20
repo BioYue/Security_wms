@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('web.static', filename='layui/css/layui.css') }}">
+    <script type="text/javascript" src="{{ url_for('web.static', filename='layui/layui.js') }}"></script>
+    {% block head %}{% endblock %}
+    <script>
+        layui.use(function () {
+            let $ = layui.$;
+            window.login_out = () => {
+                $.get('{{ url_for("admin.logout") }}', (res) => {
+                    if (res === 'logout_success') {
+                        layer.msg('退出成功', {icon: 1, time: 1200}, () => {
+                            location.reload()
+                        });
+                    } else {
+                        layer.msg('退出异常-请联系管理员', {icon: 2});
+                    }
+                })
+            }
+        });
+    </script>
+</head>
+<body>
+{% block header %}
+    <header class="header">
+        <div class="layui-container" style="height: 60px">
+            <div class="logopic">
+                <a href="/">
+                    <img src="{{ url_for('admin.static',filename='imgs/logo.png') }}" alt="">
+                </a>
+                <h2 class="title">
+                    {% block main_title %}
+                        紫砂鉴定防伪后台管理系统
+                    {% endblock %}
+                </h2>
+            </div>
+
+            <ul class="layui-nav layui-layout-right">
+{#                <li class="layui-nav-item">#}
+{#                    <a href="{{ url_for('') }}">文章</a>#}
+{#                </li>#}
+{#                <li class="layui-nav-item">#}
+{#                    <a>笔记</a>#}
+{#                </li>#}
+
+                <li class="layui-nav-item header_avata">
+                    <a>
+                        <img src="{{ url_for('admin.static',filename='imgs/avata.jpg') }}" alt="">
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{{ url_for('admin.master_settings') }}">主站设置</a></dd>
+{#                        <dd><a href="javascript:;">系统设置</a></dd>#}
+
+                        <hr>
+                        <dd style="text-align: center;"><span onclick="login_out()" id="login-out">退出</span></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+</body>
+</html>

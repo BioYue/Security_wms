@@ -1,0 +1,135 @@
+{% extends 'common/base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('web.static', filename='css/container_up.css') }}">
+    <style>
+        .layui-container div {
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer {
+            background-color: #d2c9c9;
+            {#min-width: 900px;#}
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            color: #ffffff;
+            height: 160px;
+        }
+
+        .group {
+            display: flex;
+            line-height: 60px;
+            align-items: center;
+            position: relative;
+            width: 600px;
+        }
+
+        .input {
+            width: 100%;
+            height: 60px;
+            line-height: 28px;
+            padding: 0 1rem 0 4rem;
+            border: 3px solid transparent;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+            background-color: #f3f3f4;
+            color: #0d0c22;
+            transition: 0.3s ease;
+            font-size: 22px;
+        }
+
+        .input::placeholder {
+            color: #9e9ea7;
+        }
+
+        .input:focus,
+        input:hover {
+            outline: none;
+            border-color: rgba(247, 127, 0, 0.4);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgb(247 127 0 / 10%);
+        }
+
+        .icon {
+            position: absolute;
+            left: 1rem;
+            fill: #9e9ea7;
+            width: 1.8rem;
+            height: 1.8rem;
+        }
+
+        .footer-btn {
+            display: inline-block;
+            vertical-align: middle;
+            height: 60px;
+            line-height: 60px;
+            border: 1px solid transparent;
+            padding: 0 18px;
+            background-color: #3B82F6FF;
+            color: #fff;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: 6px;
+            width: 180px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .footer-btn:hover {
+            background-color: #476ac7;
+        }
+
+        .layui-layer-msg {
+            border-radius: 6px !important;
+        }
+
+        .top img{
+            max-width: 900px;
+        }
+
+        .center img{
+            max-width: 900px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="top"><img src="{{ url_for('web.static', filename='imgs/top.jpg') }}" alt=""></div>
+    <div class="center"><img src="{{ url_for('web.static', filename='imgs/center.jpg') }}" alt=""></div>
+    <div class="footer">
+        <div class="layui-form">
+            <div class="group">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
+                    <g>
+                        <path
+                                d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+                        ></path>
+                    </g>
+                </svg>
+                <input class="input" name="code" lay-verify="required"
+                       lay-reqtext="请输入防伪码！" type="search" placeholder="Search"/>
+                <button class="footer-btn" lay-submit lay-filter="search">查询</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        layui.use(function () {
+            let form = layui.form;
+
+            form.on('submit(search)', function (data) {
+                let field = data.field;
+                window.location.href = '{{ url_for('web.identify')}}' + `?code=${field.code}`;
+                return false;
+            });
+        })
+    </script>
+{% endblock %}

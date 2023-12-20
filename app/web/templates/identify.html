@@ -1,0 +1,87 @@
+{% extends 'common/base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('web.static', filename='css/identify.css') }}">
+    <link rel="stylesheet" href="{{ url_for('web.static', filename='css/container_up.css') }}">
+    <style>
+        .top {
+            display: flex;
+            justify-content: center;
+        }
+
+        .top img {
+            max-width: 900px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .center div {
+            padding: 8px;
+        }
+
+        .footer_btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 100px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    <div class="top"><img src="{{ url_for('web.static', filename='imgs/top.jpg') }}" alt=""></div>
+    <div class="center">
+        <div class="card">
+            <div class="card-content">
+                <p class="card-title">
+                    {% if products_json %}
+                        <img src="{{ url_for('web.static', filename='imgs/yes.png') }}" alt="">
+                        您查询的 {{ products_json.goods_name }} 经鉴定为真品
+                    {% else %}
+                        <img src="{{ url_for('web.static', filename='imgs/decline.png') }}" alt="">
+                        防伪码不存在，请仔细核对谨防假冒！
+                    {% endif %}
+                </p>
+                <p class="card-para" style="letter-spacing: 1px">
+                    {% if products_json %}
+                        The {{ products_json.goods_name }} you asked about has been authenticated as genuine celebrate
+                        you!
+                    {% else %}
+                        The anti-counterfeiting code does not exist, please check carefully to beware of counterfeiting!
+                    {% endif %}
+                </p>
+                {% if products_json %}
+                    <p class="card-para">防伪码: <span
+                            style="letter-spacing: 1px">{{ products_json.security_code }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {% if products_json.queries_num == 0 %}
+                            当前为首次查询！
+                        {% else %}
+                            非首次查询&nbsp;&nbsp;&nbsp;当前查询次数：{{ products_json.queries_num }}
+                        {% endif %}
+                    </p>
+                {% else %}
+                    <p>&nbsp;</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="footer_btn">
+        <button id="back">返回首页</button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        layui.use(function () {
+            let $ = layui.$;
+            $('#back').click(() => {
+                window.location.href = '/'
+            })
+        })
+    </script>
+{% endblock %}

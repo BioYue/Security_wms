@@ -1,0 +1,146 @@
+body {
+    background: #f8f8f8;
+    font-family: "Apple LiGothic Medium,Microsoft YaHei", "微软雅黑", "Arial", sans-serif;
+    font-size: 14px;
+    color: #4e4e4e;
+    -webkit-font-smoothing: antialiased;
+    -webkit-overflow-scrolling: touch;
+    line-height: 1.8em;
+    position: relative;
+    min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(196, 196, 196, 0.7);
+}
+
+.button_base {
+    margin-bottom: 20px;
+}
+
+/* ------------ 头部样式 ------------ */
+.header {
+    width: 100%;
+    /*height: 60px;*/
+    position: relative;
+    background-color: #fff;
+    z-index: 1000;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+}
+
+.header:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #eee;
+    content: '';
+}
+
+/* header区域字体颜色 */
+.header * {
+    /*color: #FFF !important;*/
+}
+
+.header .logopic {
+    height: 60px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.header .logopic img {
+    width: 50px;
+    margin-right: 24px;
+}
+
+/*清除导航原背景颜色*/
+.header .layui-nav {
+    background: none;
+}
+
+.header .layui-nav .layui-nav-item a {
+    color: #4e4e4e;
+}
+
+/*清除导航项选中后的绿条标记*/
+/*.header .layui-nav .layui-this:after {*/
+/*    content: none;*/
+/*}*/
+
+/*导航项鼠标悬停颜色*/
+.header .layui-nav .layui-nav-item a:hover {
+    color: #12caea !important;
+}
+
+/* 头像 */
+.header_avata img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+/*.header_avata dl, .header_avata dd {*/
+/*    border-radius: 8px;*/
+/*    border: 1px solid #227eaa;*/
+/*    color: #1f1f1f !important;*/
+/*    background-color: #227eaa !important;*/
+/*}*/
+
+/*.header .layui-nav .header_avata dl a:hover {*/
+/*    background-color: #227eaa;*/
+/*}*/
+
+
+/* ------------ Lyaui风格头部样式 ------------ */
+.ws-bg-light {
+    background-color: #fff !important;
+}
+
+.ws-header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #2f363c;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+}
+
+.ws-header:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #eee;
+    content: '';
+}
+
+#login-out {
+    color: #4e4e4e;
+    cursor: pointer;
+}
+
+/*----退出按钮Span修改----*/
+.header .layui-nav .layui-nav-item span:hover {
+    color: #12caea !important;
+}
+
+.layui-nav .layui-nav-child span:hover {
+    background-color: #f8f8f8;
+    color: rgba(0, 0, 0, .8);
+}
+
+h1 {
+    color: #3a3a3a !important;
+}

@@ -1,0 +1,121 @@
+@media screen and (min-width: 768px) {
+    .layui-container {
+        width:900px
+    }
+
+    .layui-hide-sm {
+        display: none!important
+    }
+
+    .layui-show-sm-block {
+        display: block!important
+    }
+
+    .layui-show-sm-inline {
+        display: inline!important
+    }
+
+    .layui-show-sm-inline-block {
+        display: inline-block!important
+    }
+
+    .layui-col-sm1,.layui-col-sm10,.layui-col-sm11,.layui-col-sm12,.layui-col-sm2,.layui-col-sm3,.layui-col-sm4,.layui-col-sm5,.layui-col-sm6,.layui-col-sm7,.layui-col-sm8,.layui-col-sm9 {
+        float: left
+    }
+
+    .layui-col-sm1 {
+        width: 8.33333333%
+    }
+
+    .layui-col-sm2 {
+        width: 16.66666667%
+    }
+
+    .layui-col-sm3 {
+        width: 25%
+    }
+
+    .layui-col-sm4 {
+        width: 33.33333333%
+    }
+
+    .layui-col-sm5 {
+        width: 41.66666667%
+    }
+
+    .layui-col-sm6 {
+        width: 50%
+    }
+
+    .layui-col-sm7 {
+        width: 58.33333333%
+    }
+
+    .layui-col-sm8 {
+        width: 66.66666667%
+    }
+
+    .layui-col-sm9 {
+        width: 75%
+    }
+
+    .layui-col-sm10 {
+        width: 83.33333333%
+    }
+
+    .layui-col-sm11 {
+        width: 91.66666667%
+    }
+
+    .layui-col-sm12 {
+        width: 100%
+    }
+
+    .layui-col-sm-offset1 {
+        margin-left: 8.33333333%
+    }
+
+    .layui-col-sm-offset2 {
+        margin-left: 16.66666667%
+    }
+
+    .layui-col-sm-offset3 {
+        margin-left: 25%
+    }
+
+    .layui-col-sm-offset4 {
+        margin-left: 33.33333333%
+    }
+
+    .layui-col-sm-offset5 {
+        margin-left: 41.66666667%
+    }
+
+    .layui-col-sm-offset6 {
+        margin-left: 50%
+    }
+
+    .layui-col-sm-offset7 {
+        margin-left: 58.33333333%
+    }
+
+    .layui-col-sm-offset8 {
+        margin-left: 66.66666667%
+    }
+
+    .layui-col-sm-offset9 {
+        margin-left: 75%
+    }
+
+    .layui-col-sm-offset10 {
+        margin-left: 83.33333333%
+    }
+
+    .layui-col-sm-offset11 {
+        margin-left: 91.66666667%
+    }
+
+    .layui-col-sm-offset12 {
+        margin-left: 100%
+    }
+}

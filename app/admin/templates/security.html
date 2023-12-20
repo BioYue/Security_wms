@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="layui-container ws-container">
+        <button type="button" class="layui-btn button_base layui-bg-blue" lay-on="batch_add">批量新增</button>
+        <button type="button" class="layui-btn button_base" lay-on="definite_delete">指定删除</button>
+        <button type="button" class="layui-btn button_base" lay-on="batch_delete">批量删除</button>
+        <table class="layui-hide" id="zs"></table>
+    </div>
+
+    <script type="text/html" id="batch_add_content">
+        <form class="layui-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="layui-form-item" style="margin-top: 15px">
+                <label class="layui-form-label">产品名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" lay-verify="required" placeholder="请输入标签名称"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 15px">
+                <label class="layui-form-label">生成数量</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="num" lay-verify="create_num" placeholder="请输入生成数量"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">生产日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="date" class="layui-input" id="ID-laydate-demo"
+                           placeholder="请选择生产日期">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">确认添加</button>
+                </div>
+            </div>
+        </form>
+    </script>
+
+    <script type="text/html" id="definite_delete">
+        <form class="layui-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="layui-form-item" style="margin-top: 15px">
+                <label class="layui-form-label">产品名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" lay-verify="required" placeholder="请输入要删除的产品名"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">生产日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="date" class="layui-input" id="ID-laydate-demo"
+                           placeholder="请选择生产日期">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="confirm_delete">确认删除</button>
+                </div>
+            </div>
+        </form>
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        layui.use(function () {
+            let table = layui.table;
+            let util = layui.util;
+            let $ = layui.$;
+            let laydate = layui.laydate;
+            let form = layui.form;
+
+            util.on('lay-on', {
+                batch_add: () => {
+                    layer.open({
+                        type: 1,
+                        shade: 0.2,
+                        title: '新增防伪商品',
+                        content: $('#batch_add_content').html(),
+                        area: ['350px', '300px'],
+                        offset: '150px',
+                        success: function (layero, index) {
+                            form.render();
+
+                            // 日期组件
+                            laydate.render({
+                                value: new Date(),
+                                elem: '#ID-laydate-demo'
+                            });
+
+                            // 数量验证规则
+                            form.verify({
+                                create_num: function (value, elem) {
+                                    if (!/^\d+$/.test(value)) {
+                                        return '必须是纯数字';
+                                    }
+                                    let numValue = parseInt(value, 10);
+                                    if (numValue > 100000) {
+                                        return '必须小于等于100000'
+                                    }
+                                }
+                            })
+
+                            form.on('submit(add)', (data) => {
+                                console.log(data)
+                                $.post('{{ url_for('admin.security_add') }}', data.field,
+                                    (res) => {
+                                        if (res.status === 'success') {
+                                            layer.msg('新增成功', {icon: 1, time: 1200}, () => {
+                                                location.reload()
+                                            });
+                                        } else {
+                                            layer.msg('新增异常-请联系管理员', {icon: 2});
+                                        }
+                                    }
+                                );
+                                layer.close(index);
+                                return false;
+                            })
+                        }
+                    });
+                },
+
+                batch_delete: () => {
+                    let tableStatus = table.checkStatus('zs');
+                    if (tableStatus.data.length) {
+                        let selectedIds = tableStatus.data.map(item => item.id);
+                        $.post('{{ url_for('admin.security_delete') }}', {
+                            data: JSON.stringify({ids: selectedIds}),
+                            csrf_token: '{{ csrf_token() }}'
+                        }, (res) => {
+                            if (res.status === 'success') {
+                                layer.msg('删除成功', {icon: 1, time: 1200}, () => {
+                                    location.reload()
+                                });
+                            } else {
+                                layer.msg('删除异常-请联系管理员', {icon: 2});
+                            }
+                        })
+                    } else {
+                        layer.msg('请选择要删除的数据', {icon: 7, time: 1500, anim: 6});
+                    }
+
+                },
+
+                definite_delete: () => {
+                    layer.open({
+                        type: 1,
+                        shade: 0.2,
+                        title: '指定条件删除',
+                        content: $('#definite_delete').html(),
+                        area: ['350px', '240px'],
+                        offset: '150px',
+                        success: function (layero, index) {
+                            form.render();
+
+                            laydate.render({
+                                elem: '#ID-laydate-demo'
+                            });
+
+                            form.on('submit(confirm_delete)', (data) => {
+                                $.post('{{ url_for('admin.security_batch_delete') }}', data.field,
+                                    (res) => {
+                                        if (res.status === 'success') {
+                                            layer.msg('删除成功', {icon: 1, time: 1200}, () => {
+                                                location.reload()
+                                            });
+                                        } else {
+                                            layer.msg('删除异常-请联系管理员', {icon: 2});
+                                        }
+                                    }
+                                );
+                                layer.close(index);
+                                return false;
+                            })
+
+                        }
+                    });
+                }
+            })
+
+
+            // 已知数据渲染
+            let inst = table.render({
+                elem: '#zs',
+                id: 'zs',
+                url: '{{ url_for("admin.security_query") }}',
+                align: 'center',
+                cols: [[ //标题栏
+                    {type: 'checkbox'},
+                    {field: 'id', title: 'ID', width: 120, sort: true, align: 'center'},
+                    {field: 'goods_name', title: '产品名称', minWidth: 180, align: 'center'},
+                    {field: 'security_code', title: '防伪码', Width: 180, align: 'center'},
+                    {field: 'queries_num', title: '查询次数', width: 180, sort: true, align: 'center'},
+                    {field: 'production_time', title: '生产时间', width: 180, sort: true, align: 'center'},
+                    {field: 'add_time', title: '创建时间', width: 180, sort: true, align: 'center'},
+                    {field: 'upd_time', title: '更新时间', width: 180, sort: true, align: 'center'}
+                ]],
+                //skin: 'line', // 表格风格
+                //even: true,
+                page: true,
+                limits: [15, 50, 100, 1000],
+                limit: 15
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('web.static', filename='layui/css/layui.css') }}">
+    <script type="text/javascript" src="{{ url_for('web.static', filename='layui/layui.js') }}"></script>
+    {% block head %}
+    	
+    {% endblock %}
+</head>
+<body>
+
+    <div class="layui-container">
+        {% block body %}
+
+        {% endblock %}
+    </div>
+
+{% block script %}
+	
+{% endblock %}
+</body>
+</html>

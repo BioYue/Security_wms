@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        h1 {
+            text-align: center;
+            color: #303030;
+            margin-bottom: 20px;
+        }
+
+        .layui-upload-drag {
+            padding: 80px;
+        }
+
+        .uoload-content {
+            margin: 60px 200px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="layui-container">
+        <div class="uoload-content">
+            <h1>主站头部图片上传</h1>
+            <div class="layui-upload-drag" style="display: block;" id="upload-1">
+                <i class="layui-icon layui-icon-upload"></i>
+                <div>点击上传，或将文件拖拽到此处</div>
+                <div class="layui-hide" id="preview-1">
+                    <hr>
+                    <img src="" alt="上传成功后渲染" style="max-width: 100%">
+                </div>
+            </div>
+        </div>
+        <div class="uoload-content">
+            <h1>主站中心图片上传</h1>
+            <div class="layui-upload-drag" style="display: block;" id="upload-2">
+                <i class="layui-icon layui-icon-upload"></i>
+                <div>点击上传，或将文件拖拽到此处</div>
+                <div class="layui-hide" id="preview-2">
+                    <hr>
+                    <img src="" alt="上传成功后渲染" style="max-width: 100%">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        layui.use(function () {
+            let upload = layui.upload;
+            let $ = layui.$;
+
+            upload.render({
+                elem: '#upload-1',
+                url: '{{ url_for("admin.main_img_upload") }}',
+                data: {location: 'top', csrf_token: '{{ csrf_token() }}'},
+                accept: 'images',
+                done: function (res) {
+                    layer.msg('上传成功');
+                    let timestamp = new Date().getTime();
+                    $('#preview-1').removeClass('layui-hide')
+                        .find('img').attr('src', res.url + '?timestamp=' + timestamp);
+                }
+            });
+
+            upload.render({
+                elem: '#upload-2',
+                url: '{{ url_for("admin.main_img_upload") }}',
+                data: {location: 'center', csrf_token: '{{ csrf_token() }}'},
+                accept: 'images',
+                done: function (res) {
+                    layer.msg('上传成功');
+                    let timestamp = new Date().getTime();
+                    $('#preview-2').removeClass('layui-hide')
+                        .find('img').attr('src', res.url + '?timestamp=' + timestamp);
+                }
+            });
+        });
+    </script>
+{% endblock %}

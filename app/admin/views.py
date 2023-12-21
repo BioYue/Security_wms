@@ -1,13 +1,15 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash, session
-from werkzeug.security import check_password_hash
-from start import db, csrf, login_manager
-from .models import SecurityCode, User
-from flask_login import login_user, login_required, logout_user
-from datetime import datetime
-from start.settings import BASE_DIR
-import secrets
 import json
-import time
+import secrets
+from datetime import datetime
+
+from flask import Blueprint, render_template, request, jsonify, url_for
+from flask_login import login_user, login_required, logout_user
+from sqlalchemy import or_
+from werkzeug.security import check_password_hash
+
+from start import db, login_manager
+from start.settings import BASE_DIR
+from .models import SecurityCode, User
 
 bp = Blueprint('admin', __name__, url_prefix='/zs_admin', template_folder='templates', static_folder='static')
 
@@ -51,7 +53,6 @@ def master_settings():
     主站设置
     :return:
     """
-
     return render_template('master_settings.html')
 
 
@@ -69,17 +70,15 @@ def main_img_upload():
     file.save(BASE_DIR / file_path)
     return {'url': url_for('web.static', filename=f'imgs/{location}.jpg')}
 
-# from werkzeug.security import generate_password_hash
-#
-#
+
 # @bp.route('/register')
 # def register():
 #     """
 #     用户注册临时API
 #     :return:
 #     """
-#     username = 'admin'
-#     password = '123456'
+#     username = 'fanjuying'
+#     password = 'fanjuyingzisha'
 #     password_hash = generate_password_hash(password, method='pbkdf2:sha256:600000')
 #     user = User(username=username, password=password_hash)
 #     db.session.add(user)
@@ -100,10 +99,8 @@ def security_add():
         production_time = request.form['date']
         goods_name = request.form['name']
         creat_num = int(request.form['num'])
-        print(request.form)
 
         # 数据验证，确保 production_time, goods_name, creat_num 是合法的
-
         security_codes = [
             {
                 'goods_name': goods_name,
@@ -112,14 +109,12 @@ def security_add():
             }
             for _ in range(creat_num)
         ]
-
         # start = time.time()
         # 批量插入，使用事务
-        with db.session.begin():
-            db.session.bulk_insert_mappings(SecurityCode, security_codes)
-        # print('=' * 15 + f'\n-----------任务耗时-----------{time.time() - start}秒\n' + '=' * 15)
+        # with db.session.begin():
+        db.session.bulk_insert_mappings(SecurityCode, security_codes)
+        db.session.commit()
         return jsonify({'status': 'success', 'message': 'Records deleted successfully'})
-
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
@@ -129,10 +124,16 @@ def security_add():
 def security_query():
     page = request.args.get('page', type=int, default=1)
     limit = request.args.get('limit', type=int, default=15)
-    tag_pg = SecurityCode.query.order_by(SecurityCode.id.desc()).paginate(page=page, per_page=limit)
+    word = request.args.get('word')
+    if word:
+        security_code_pg = SecurityCode.query.filter(
+            or_(SecurityCode.goods_name.like(f"%{word}%"), SecurityCode.security_code.like(f"%{word}%"))) \
+            .order_by(SecurityCode.id.desc()).paginate(page=page, per_page=limit)
+    else:
+        security_code_pg = SecurityCode.query.order_by(SecurityCode.id.desc()).paginate(page=page, per_page=limit)
 
-    tag_list = []
-    for item in tag_pg.items:
+    security_code_list = []
+    for item in security_code_pg.items:
         row = {
             'id': item.id,
             'goods_name': item.goods_name,
@@ -142,12 +143,11 @@ def security_query():
             'add_time': item.add_time.strftime("%Y-%m-%d %H:%M"),
             'upd_time': item.upd_time.strftime("%Y-%m-%d %H:%M")
         }
-        tag_list.append(row)
-    # layui需要的表格数据解析回调的格式
+        security_code_list.append(row)
     data = {
         'code': 0,
-        'data': tag_list,  # 实际数据
-        'count': tag_pg.total,  # 数据总数
+        'data': security_code_list,
+        'count': security_code_pg.total,
         'msg': ''
     }
     return jsonify(data)

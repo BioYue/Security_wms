@@ -1,11 +1,55 @@
 {% extends 'base.html' %}
 
+{% block head %}
+    <style>
+        .top-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-box .layui-btn {
+            margin: 0 0 0 12px;
+            height: 36px;
+            line-height: 36px;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 
     <div class="layui-container ws-container">
-        <button type="button" class="layui-btn button_base layui-bg-blue" lay-on="batch_add">批量新增</button>
-        <button type="button" class="layui-btn button_base" lay-on="definite_delete">指定删除</button>
-        <button type="button" class="layui-btn button_base" lay-on="batch_delete">批量删除</button>
+        <div class="top-box">
+            <div class="">
+                <button type="button" class="layui-btn button_base layui-bg-blue" lay-on="batch_add">批量新增</button>
+                <button type="button" class="layui-btn button_base" lay-on="definite_delete">指定删除</button>
+                <button type="button" class="layui-btn button_base" lay-on="batch_delete">批量删除</button>
+            </div>
+
+            <form class="layui-form">
+                <div class="search-box">
+                    <div class="layui-input-wrap" style="display: inline-block">
+                        <div class="layui-input-prefix">
+                            <i class="layui-icon layui-icon-username"></i>
+                        </div>
+                        <input type="text" name="word"
+                               placeholder="请输入产品名称或防伪码" class="layui-input"
+                               lay-affix="clear">
+                    </div>
+                    <div class="layui-btn-container" style="display: inline-block">
+                        <button class="layui-btn" lay-submit lay-filter="table-search">搜索</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
         <table class="layui-hide" id="zs"></table>
     </div>
 
@@ -207,6 +251,20 @@
                 page: true,
                 limits: [15, 50, 100, 1000],
                 limit: 15
+            });
+
+            // 搜索逻辑
+            form.on('submit(table-search)', function (data) {
+                let field = data.field; // 获得表单字段
+                // 执行搜索重载
+                console.log(field)
+                table.reload('zs', {
+                    page: {
+                        curr: 1 // 重新从第 1 页开始
+                    },
+                    where: field // 搜索的字段
+                });
+                return false;
             });
         });
     </script>

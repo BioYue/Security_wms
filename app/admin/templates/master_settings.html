@@ -42,7 +42,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="footer_btn">
+            <button id="back">返回管理页</button>
+        </div>
     </div>
 
 {% endblock %}
@@ -52,6 +54,10 @@
         layui.use(function () {
             let upload = layui.upload;
             let $ = layui.$;
+
+            $('#back').click(() => {
+                window.location.href = '{{ url_for("admin.security") }}'
+            })
 
             upload.render({
                 elem: '#upload-1',
@@ -78,6 +84,7 @@
                         .find('img').attr('src', res.url + '?timestamp=' + timestamp);
                 }
             });
+
         });
     </script>
 {% endblock %}
